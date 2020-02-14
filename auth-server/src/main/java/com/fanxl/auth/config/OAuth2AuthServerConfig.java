@@ -33,11 +33,18 @@ public class OAuth2AuthServerConfig extends AuthorizationServerConfigurerAdapter
     @Override
     public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
         clients.inMemory()
-                .withClient("test-app")
+                .withClient("user-app")
                 .secret(passwordEncoder.encode("123456"))
                 .scopes("read", "write")
                 .accessTokenValiditySeconds(3600)
-                .resourceIds("user-server", "api-server")
+                .resourceIds("user-server")
+                .authorizedGrantTypes("password")
+                .and()
+                .withClient("api-app")
+                .secret(passwordEncoder.encode("123456"))
+                .scopes("read")
+                .accessTokenValiditySeconds(3600)
+                .resourceIds("api-server")
                 .authorizedGrantTypes("password");
 
     }
