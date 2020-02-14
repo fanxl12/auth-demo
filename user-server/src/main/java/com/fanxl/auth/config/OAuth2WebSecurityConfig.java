@@ -1,13 +1,14 @@
 package com.fanxl.auth.config;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.oauth2.provider.authentication.OAuth2AuthenticationManager;
-import org.springframework.security.oauth2.provider.token.RemoteTokenServices;
-import org.springframework.security.oauth2.provider.token.ResourceServerTokenServices;
+import org.springframework.security.oauth2.provider.token.*;
 
 /**
  * @description
@@ -18,13 +19,25 @@ import org.springframework.security.oauth2.provider.token.ResourceServerTokenSer
 @EnableWebSecurity
 public class OAuth2WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
+    @Autowired
+    private UserDetailsService userDetailsService;
+
     @Bean
     public ResourceServerTokenServices tokenServices() {
         RemoteTokenServices tokenServices = new RemoteTokenServices();
         tokenServices.setClientId("user-app");
         tokenServices.setClientSecret("123456");
+        tokenServices.setAccessTokenConverter(getAccessTokenConverter());
         tokenServices.setCheckTokenEndpointUrl("http://localhost:8011/oauth/check_token");
         return tokenServices;
+    }
+
+    private AccessTokenConverter getAccessTokenConverter() {
+        DefaultAccessTokenConverter accessTokenConverter = new DefaultAccessTokenConverter();
+        DefaultUserAuthenticationConverter defaultUserAuthenticationConverter = new DefaultUserAuthenticationConverter();
+        defaultUserAuthenticationConverter.setUserDetailsService(userDetailsService);
+        accessTokenConverter.setUserTokenConverter(defaultUserAuthenticationConverter);
+        return accessTokenConverter;
     }
 
     @Override
