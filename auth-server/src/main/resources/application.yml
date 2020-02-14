@@ -1,2 +1,21 @@
 server:
   port: 8011
+
+spring:
+  application:
+    name: auth-demo-auth-server
+  datasource:
+    url: jdbc:mysql://192.168.205.150:3306/fan_coupon_data?characterEncoding=utf8&characterSetResults=utf8&autoReconnect=true
+    username: root
+    password: fxl123
+    type: com.zaxxer.hikari.HikariDataSource
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    # 连接池
+    hikari:
+      maximum-pool-size: 8
+      minimum-idle: 4
+      idle-timeout: 30000
+      connection-timeout: 30000
+      max-lifetime: 45000
+      auto-commit: true
+      pool-name: FanCouponHikariCP
