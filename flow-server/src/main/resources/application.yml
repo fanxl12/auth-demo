@@ -11,3 +11,10 @@ spring:
     suffix: .html
     servlet:
       content-type: text/html
+  redis:
+    database: 0
+    host: 192.168.205.150
+    port: 6379
+    # password:
+    # 连接超时时间
+    timeout: 10000

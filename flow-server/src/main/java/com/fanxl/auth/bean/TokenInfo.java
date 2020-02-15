@@ -3,6 +3,7 @@ package com.fanxl.auth.bean;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 
 /**
@@ -10,12 +11,18 @@ import java.time.LocalDateTime;
  *
  */
 @Data
-public class TokenInfo {
+public class TokenInfo implements Serializable {
+
+  private final long serialVersionUID = 1L;
 
   private String access_token;
+
   private String refresh_token;
+
   private String token_type;
+
   private Long expires_in;
+
   private String scope;
 
   private LocalDateTime expireTime;
