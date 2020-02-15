@@ -1,0 +1,20 @@
+server:
+  port: 8017
+
+spring:
+  thymeleaf:
+    cache: false
+    encoding: UTF-8
+    check-template-location: true
+    mode: HTML5
+    prefix: classpath:/templates
+    suffix: .html
+    servlet:
+      content-type: text/html
+  redis:
+    database: 0
+    host: 192.168.205.150
+    port: 6379
+    # password:
+    # 连接超时时间
+    timeout: 10000

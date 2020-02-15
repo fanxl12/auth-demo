@@ -7,6 +7,8 @@
         <module>auth-server</module>
         <module>api-server</module>
         <module>user-server</module>
+        <module>flow-server</module>
+        <module>web-server</module>
     </modules>
 
     <parent>

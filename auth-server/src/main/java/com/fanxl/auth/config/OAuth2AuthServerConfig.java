@@ -45,7 +45,27 @@ public class OAuth2AuthServerConfig extends AuthorizationServerConfigurerAdapter
                 .scopes("read")
                 .accessTokenValiditySeconds(3600)
                 .resourceIds("api-server")
-                .authorizedGrantTypes("password");
+                .authorizedGrantTypes("password")
+                .and()
+                .withClient("flow-app")
+                .secret(passwordEncoder.encode("123456"))
+                .scopes("read")
+                .accessTokenValiditySeconds(3600)
+                .refreshTokenValiditySeconds(259200)
+                .resourceIds("flow-server")
+                .redirectUris("http://web.fan.com:8016/oauth/callback")
+                .autoApprove(true)
+                .authorizedGrantTypes("authorization_code")
+                .and()
+                .withClient("web-app")
+                .secret(passwordEncoder.encode("123456"))
+                .scopes("read")
+                .accessTokenValiditySeconds(3600)
+                .refreshTokenValiditySeconds(259200)
+                .resourceIds("web-server")
+                .redirectUris("http://web.fan.com:8017/oauth/callback")
+                .autoApprove(true)
+                .authorizedGrantTypes("authorization_code");
 
     }
 
