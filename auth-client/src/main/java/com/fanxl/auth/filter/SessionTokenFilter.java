@@ -1,8 +1,11 @@
 package com.fanxl.auth.filter;
 
+import com.fanxl.auth.properties.ClientProperties;
+import com.fanxl.auth.properties.SecurityProperties;
 import com.fanxl.auth.token.TokenInfo;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.ArrayUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
 import org.springframework.stereotype.Component;
 import org.springframework.util.LinkedMultiValueMap;
@@ -25,6 +28,9 @@ import java.io.IOException;
 @Component
 public class SessionTokenFilter extends OncePerRequestFilter {
 
+    @Autowired
+    private SecurityProperties securityProperties;
+
     private RestTemplate restTemplate = new RestTemplate();
 
     private String[] notAuthUrls = new String[] {"/favicon.ico", "/static", "/oauth/callback"};
@@ -40,11 +46,11 @@ public class SessionTokenFilter extends OncePerRequestFilter {
             if(token != null) {
                 String tokenValue = token.getAccess_token();
                 if(token.isExpired()) {
-                    String oauthServiceUrl = "http://auth.fan.com:8011/oauth/token";
+                    String oauthServiceUrl = securityProperties.getTokenServer();
 
                     HttpHeaders headers = new HttpHeaders();
                     headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
-                    headers.setBasicAuth("web-app", "123456");
+                    headers.setBasicAuth(securityProperties.getClient().getId(), securityProperties.getClient().getSecret());
 
                     MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
                     params.add("grant_type", "refresh_token");
@@ -77,11 +83,12 @@ public class SessionTokenFilter extends OncePerRequestFilter {
 
     private void toAuthLogin(HttpServletResponse response) {
         log.info("没有认证，要去认证服务器认证");
-        String url = "http://auth.fan.com:8011/oauth/authorize?" +
-                "client_id=web-app&" +
-                "redirect_uri=http://web.fan.com:8017/oauth/callback&" +
+        ClientProperties client = securityProperties.getClient();
+        String url = securityProperties.getAuthServer() + "?" +
+                "client_id=" + client.getId() + "&" +
+                "redirect_uri=" + client.getCallback() + "&" +
                 "response_type=code&" +
-                "state=/";
+                "state=" + client.getState();
         try {
             response.sendRedirect(url);
         } catch (IOException e) {

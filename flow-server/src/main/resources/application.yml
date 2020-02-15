@@ -18,3 +18,13 @@ spring:
     # password:
     # 连接超时时间
     timeout: 10000
+
+auth:
+  security:
+    authServer: http://auth.fan.com:8011/oauth/token
+    tokenServer: http://auth.fan.com:8011/oauth/authorize
+    client:
+      id: flow-app
+      secret: 123456
+      callback: http://web.fan.com:8016/oauth/callback
+      state: /

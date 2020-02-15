@@ -1,7 +1,9 @@
 package com.fanxl.auth.controller;
 
+import com.fanxl.auth.properties.SecurityProperties;
 import com.fanxl.auth.token.TokenInfo;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
@@ -26,24 +28,27 @@ public class OAuthController {
 
     private RestTemplate restTemplate = new RestTemplate();
 
+    @Autowired
+    private SecurityProperties securityProperties;
+
     @GetMapping("callback")
     public void callback(@RequestParam String code,
                        String state,
                        HttpServletRequest request,
                        HttpServletResponse response) throws Exception {
 
-        log.info("state is "+state);
+        log.info("state is " + state);
 
-        String oauthServiceUrl = "http://auth.fan.com:8011/oauth/token";
+        String oauthServiceUrl = securityProperties.getTokenServer();
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
-        headers.setBasicAuth("web-app", "123456");
+        headers.setBasicAuth(securityProperties.getClient().getId(), securityProperties.getClient().getSecret());
 
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
         params.add("code", code);
         params.add("grant_type", "authorization_code");
-        params.add("redirect_uri", "http://web.fan.com:8017/oauth/callback");
+        params.add("redirect_uri", securityProperties.getClient().getCallback());
 
         HttpEntity<MultiValueMap<String, String>> entity = new HttpEntity<>(params, headers);
 

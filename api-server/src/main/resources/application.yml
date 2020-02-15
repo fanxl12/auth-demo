@@ -1,2 +1,21 @@
 server:
   port: 8010
+
+spring:
+  redis:
+    database: 0
+    host: 192.168.205.150
+    port: 6379
+    # password:
+    # 连接超时时间
+    timeout: 10000
+
+auth:
+  security:
+    authServer: http://auth.fan.com:8011/oauth/token
+    tokenServer: http://auth.fan.com:8011/oauth/authorize
+    client:
+      id: api-app
+      secret: 123456
+      callback: http://web.fan.com:8010/oauth/callback
+      state: /
