@@ -1,4 +1,4 @@
-package com.fanxl.auth.bean;
+package com.fanxl.auth.token;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;

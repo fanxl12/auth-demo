@@ -1,14 +1,14 @@
 package com.fanxl.auth.filter;
 
-import com.fanxl.auth.bean.TokenInfo;
+import com.fanxl.auth.token.TokenInfo;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.ArrayUtils;
 import org.springframework.http.*;
 import org.springframework.stereotype.Component;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.filter.OncePerRequestFilter;
-import org.thymeleaf.util.ArrayUtils;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -65,6 +65,7 @@ public class SessionTokenFilter extends OncePerRequestFilter {
                 } else {
                     authed = true;
                 }
+                log.info("token:{}", tokenValue);
             }
             if (authed) {
                 filterChain.doFilter(request, response);

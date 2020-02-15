@@ -1,6 +1,6 @@
 package com.fanxl.auth.controller;
 
-import com.fanxl.auth.bean.TokenInfo;
+import com.fanxl.auth.token.TokenInfo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.*;
 import org.springframework.util.LinkedMultiValueMap;
@@ -31,18 +31,19 @@ public class OAuthController {
                        String state,
                        HttpServletRequest request,
                        HttpServletResponse response) throws Exception {
+
         log.info("state is "+state);
 
         String oauthServiceUrl = "http://auth.fan.com:8011/oauth/token";
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
-        headers.setBasicAuth("flow-app", "123456");
+        headers.setBasicAuth("web-app", "123456");
 
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
         params.add("code", code);
         params.add("grant_type", "authorization_code");
-        params.add("redirect_uri", "http://web.fan.com:8016/oauth/callback");
+        params.add("redirect_uri", "http://web.fan.com:8017/oauth/callback");
 
         HttpEntity<MultiValueMap<String, String>> entity = new HttpEntity<>(params, headers);
 

@@ -9,6 +9,7 @@
         <module>user-server</module>
         <module>flow-server</module>
         <module>web-server</module>
+        <module>auth-client</module>
     </modules>
 
     <parent>
