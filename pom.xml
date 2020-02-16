@@ -10,6 +10,7 @@
         <module>flow-server</module>
         <module>web-server</module>
         <module>auth-client</module>
+        <module>test-server</module>
     </modules>
 
     <parent>

@@ -22,4 +22,6 @@ public class SecurityProperties {
     private String authServer;
 
     private String tokenServer;
+
+    private String type;
 }

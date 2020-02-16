@@ -18,11 +18,14 @@ spring:
     # password:
     # 连接超时时间
     timeout: 10000
+  mvc:
+    static-path-pattern: /static/**
 
 auth:
   security:
-    authServer: http://auth.fan.com:8011/oauth/token
-    tokenServer: http://auth.fan.com:8011/oauth/authorize
+    type: session
+    authServer: http://auth.fan.com:8011/oauth/authorize
+    tokenServer: http://auth.fan.com:8011/oauth/token
     client:
       id: flow-app
       secret: 123456

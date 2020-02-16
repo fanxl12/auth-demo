@@ -12,10 +12,11 @@ spring:
 
 auth:
   security:
-    authServer: http://auth.fan.com:8011/oauth/token
-    tokenServer: http://auth.fan.com:8011/oauth/authorize
+    type: token
+    authServer: http://auth.fan.com:8011/oauth/authorize
+    tokenServer: http://auth.fan.com:8011/oauth/token
     client:
       id: api-app
       secret: 123456
       callback: http://web.fan.com:8010/oauth/callback
-      state: /
+      state: http://localhost:8080/
