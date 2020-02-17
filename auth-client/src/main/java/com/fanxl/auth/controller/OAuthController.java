@@ -1,7 +1,9 @@
 package com.fanxl.auth.controller;
 
+import com.fanxl.auth.constant.AuthType;
 import com.fanxl.auth.properties.SecurityProperties;
 import com.fanxl.auth.token.TokenInfo;
+import com.fanxl.auth.utils.CookieUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
@@ -13,7 +15,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -58,26 +59,16 @@ public class OAuthController {
         tokenInfo.init();
         log.info("token: {}", tokenInfo.toString());
 
-//        request.getSession().setAttribute("token", tokenInfo);
+        AuthType authType = AuthType.of(securityProperties.getType());
+        if (authType.equals(AuthType.COOKIE)) {
+            response.addCookie(CookieUtil.getCookie("fan_access_token", tokenInfo.getAccess_token(),
+                    tokenInfo.getExpires_in().intValue(), "web.fan.com"));
 
-        Cookie accessTokenCookie = new Cookie("fan_access_token", tokenInfo.getAccess_token());
-        accessTokenCookie.setMaxAge(tokenInfo.getExpires_in().intValue());
-        accessTokenCookie.setDomain("vue.fxl.com");
-        accessTokenCookie.setPath("/");
-        response.addCookie(accessTokenCookie);
-
-//        Cookie refreshTokenCookie = new Cookie("fan_refresh_token", tokenInfo.getRefresh_token());
-//        refreshTokenCookie.setMaxAge(2592000);
-//        refreshTokenCookie.setDomain("localhost");
-//        refreshTokenCookie.setPath("/");
-//        response.addCookie(refreshTokenCookie);
-
-        response.addHeader("Access-Control-Allow-Credentials", "true");
-        response.addHeader("Access-Control-Allow-Headers", "http://vue.fxl.com:8080");
-        response.addHeader("Access-Control-Allow-Headers", "Authorization,Origin, X-Requested-With, Content-Type, Accept,Access-Token, Cookies");
-        response.addHeader("Access-Control-Max-Age", "3600");
-        response.addHeader("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT, OPTIONS");
-
+            response.addCookie(CookieUtil.getCookie("fan_refresh_token", tokenInfo.getRefresh_token(),
+                    2592000, "web.fan.com"));
+        } else {
+            request.getSession().setAttribute("token", tokenInfo);
+        }
         response.sendRedirect(state);
     }
 }

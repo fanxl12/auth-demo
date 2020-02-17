@@ -28,7 +28,7 @@ public class TokenInfo implements Serializable {
   private LocalDateTime expireTime;
 
   public TokenInfo init() {
-    expireTime = LocalDateTime.now().plusSeconds(expires_in - 3);
+    expireTime = LocalDateTime.now().plusSeconds(expires_in - 5);
     return this;
   }
 

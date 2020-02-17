@@ -14,11 +14,12 @@ spring:
 
 auth:
   security:
-    type: token
+    type: cookie
+    redirectType: url
     authServer: http://auth.fan.com:8011/oauth/authorize
     tokenServer: http://auth.fan.com:8011/oauth/token
     client:
       id: api-app
       secret: 123456
       callback: http://web.fan.com:8010/api-server/oauth/callback
-      state: http://vue.fxl.com:8080/
+      state: http://web.fan.com:8080/

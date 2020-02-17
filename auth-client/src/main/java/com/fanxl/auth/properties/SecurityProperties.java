@@ -24,4 +24,6 @@ public class SecurityProperties {
     private String tokenServer;
 
     private String type;
+
+    private String redirectType;
 }
