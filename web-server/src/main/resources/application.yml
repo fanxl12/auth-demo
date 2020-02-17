@@ -21,7 +21,8 @@ spring:
 
 auth:
   security:
-    type: session
+    type: cookie
+    redirectType: url
     authServer: http://auth.fan.com:8011/oauth/authorize
     tokenServer: http://auth.fan.com:8011/oauth/token
     client:
