@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -56,7 +57,27 @@ public class OAuthController {
         TokenInfo tokenInfo = responseEntity.getBody();
         tokenInfo.init();
         log.info("token: {}", tokenInfo.toString());
-        request.getSession().setAttribute("token", tokenInfo);
+
+//        request.getSession().setAttribute("token", tokenInfo);
+
+        Cookie accessTokenCookie = new Cookie("fan_access_token", tokenInfo.getAccess_token());
+        accessTokenCookie.setMaxAge(tokenInfo.getExpires_in().intValue());
+        accessTokenCookie.setDomain("vue.fxl.com");
+        accessTokenCookie.setPath("/");
+        response.addCookie(accessTokenCookie);
+
+//        Cookie refreshTokenCookie = new Cookie("fan_refresh_token", tokenInfo.getRefresh_token());
+//        refreshTokenCookie.setMaxAge(2592000);
+//        refreshTokenCookie.setDomain("localhost");
+//        refreshTokenCookie.setPath("/");
+//        response.addCookie(refreshTokenCookie);
+
+        response.addHeader("Access-Control-Allow-Credentials", "true");
+        response.addHeader("Access-Control-Allow-Headers", "http://vue.fxl.com:8080");
+        response.addHeader("Access-Control-Allow-Headers", "Authorization,Origin, X-Requested-With, Content-Type, Accept,Access-Token, Cookies");
+        response.addHeader("Access-Control-Max-Age", "3600");
+        response.addHeader("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT, OPTIONS");
+
         response.sendRedirect(state);
     }
 }

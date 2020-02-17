@@ -8,7 +8,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.ArrayUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
-import org.springframework.stereotype.Component;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
@@ -29,7 +28,7 @@ import java.util.Map;
  * @date: 2020/2/3 0003 20:43
  */
 @Slf4j
-@Component
+//@Component
 public class SessionTokenFilter extends OncePerRequestFilter {
 
     @Autowired

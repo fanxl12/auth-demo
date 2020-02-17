@@ -21,4 +21,4 @@ auth:
       id: api-app
       secret: 123456
       callback: http://web.fan.com:8010/api-server/oauth/callback
-      state: http://localhost:8080/
+      state: http://vue.fxl.com:8080/
