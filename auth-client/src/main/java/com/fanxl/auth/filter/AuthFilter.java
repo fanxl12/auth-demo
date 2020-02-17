@@ -64,9 +64,7 @@ public class AuthFilter extends OncePerRequestFilter {
             String accessToken = (String) request.getAttribute(AuthConstant.TOKEN_KEY);
             if (StringUtils.isEmpty(accessToken)) {
                 String refreshToken = (String) request.getAttribute(AuthConstant.REFRESH_TOKEN_KEY);
-                if (StringUtils.isEmpty(refreshToken)) {
-                    toAuthLogin(response);
-                } else {
+                if (!StringUtils.isEmpty(refreshToken)) {
                     // 有刷新token，获取token
                     String oauthServiceUrl = securityProperties.getTokenServer();
                     HttpHeaders headers = new HttpHeaders();
