@@ -2,7 +2,6 @@ package com.fanxl.auth.filter;
 
 import com.alibaba.fastjson.JSON;
 import com.fanxl.auth.constant.AuthConstant;
-import com.fanxl.auth.constant.AuthType;
 import com.fanxl.auth.constant.RedirectType;
 import com.fanxl.auth.properties.ClientProperties;
 import com.fanxl.auth.properties.SecurityProperties;
@@ -13,10 +12,8 @@ import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.annotation.Order;
-import org.springframework.http.*;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.filter.OncePerRequestFilter;
 
@@ -65,34 +62,11 @@ public class AuthFilter extends OncePerRequestFilter {
             if (StringUtils.isEmpty(accessToken)) {
                 String refreshToken = (String) request.getAttribute(AuthConstant.REFRESH_TOKEN_KEY);
                 if (!StringUtils.isEmpty(refreshToken)) {
-                    // 有刷新token，获取token
-                    String oauthServiceUrl = securityProperties.getTokenServer();
-                    HttpHeaders headers = new HttpHeaders();
-                    headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
-                    headers.setBasicAuth(securityProperties.getClient().getId(), securityProperties.getClient().getSecret());
-
-                    MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
-                    params.add("grant_type", "refresh_token");
-                    params.add("refresh_token", refreshToken);
-
-                    HttpEntity<MultiValueMap<String, String>> entity = new HttpEntity<>(params, headers);
                     try {
-                        ResponseEntity<TokenInfo> responseEntity = restTemplate.exchange(oauthServiceUrl, HttpMethod.POST, entity, TokenInfo.class);
                         log.info("刷新token了");
-                        TokenInfo tokenInfo = responseEntity.getBody();
-                        tokenInfo.init();
+                        TokenInfo tokenInfo = CookieUtil.getTokenInfo(securityProperties, null, refreshToken, restTemplate);
                         accessToken = tokenInfo.getAccess_token();
-
-                        AuthType authType = AuthType.of(securityProperties.getType());
-                        if (authType.equals(AuthType.COOKIE)) {
-                            response.addCookie(CookieUtil.getCookie("fan_access_token", tokenInfo.getAccess_token(),
-                                    tokenInfo.getExpires_in().intValue(), "web.fan.com"));
-
-                            response.addCookie(CookieUtil.getCookie("fan_refresh_token", tokenInfo.getRefresh_token(),
-                                    2592000, "web.fan.com"));
-                        } else {
-                            request.getSession().setAttribute("token", tokenInfo);
-                        }
+                        CookieUtil.saveToken(request, response, tokenInfo, securityProperties.getType());
                     } catch (Exception e) {
                         e.printStackTrace();
                         toAuthLogin(response);
