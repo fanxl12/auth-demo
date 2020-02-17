@@ -1,8 +1,9 @@
-package com.fanxl.auth.controller;
+package com.fanxl.auth;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
@@ -11,16 +12,15 @@ import javax.servlet.http.HttpServletResponse;
 /**
  * @description
  * @author: fanxl
- * @date: 2020/2/14 0014 17:43
+ * @date: 2020/2/14 0014 17:36
  */
 @Slf4j
-@RequestMapping("/api")
 @RestController
-public class ApiController {
+@SpringBootApplication
+public class TestApplication {
 
-    @GetMapping("")
-    public String get() {
-        return "you get api information";
+    public static void main(String[] args) {
+        SpringApplication.run(TestApplication.class, args);
     }
 
     @GetMapping("/test")
@@ -32,4 +32,5 @@ public class ApiController {
         }
         return "you get api test";
     }
+
 }

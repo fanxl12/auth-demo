@@ -37,7 +37,8 @@ public class SessionTokenFilter extends OncePerRequestFilter {
 
     private RestTemplate restTemplate = new RestTemplate();
 
-    private String[] notAuthUrls = new String[] {"/favicon.ico", "/static", "/oauth/callback", "/api/test"};
+    private String[] notAuthUrls = new String[] {"/favicon.ico", "/static", "/oauth/callback", "/api/test",
+            "/api-server/favicon.ico", "/api-server/static", "/api-server/oauth/callback", "/api-server/api/test"};
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {

@@ -46,7 +46,7 @@ public class OAuth2AuthServerConfig extends AuthorizationServerConfigurerAdapter
                 .accessTokenValiditySeconds(3600)
                 .refreshTokenValiditySeconds(259200)
                 .resourceIds("api-server")
-                .redirectUris("http://web.fan.com:8010/oauth/callback")
+                .redirectUris("http://web.fan.com:8010/api-server/oauth/callback")
                 .autoApprove(true)
                 .authorizedGrantTypes("authorization_code")
                 .and()

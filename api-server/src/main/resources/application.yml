@@ -1,5 +1,7 @@
 server:
   port: 8010
+  servlet:
+    context-path: /api-server
 
 spring:
   redis:
@@ -18,5 +20,5 @@ auth:
     client:
       id: api-app
       secret: 123456
-      callback: http://web.fan.com:8010/oauth/callback
+      callback: http://web.fan.com:8010/api-server/oauth/callback
       state: http://localhost:8080/
