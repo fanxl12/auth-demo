@@ -39,4 +39,19 @@ public class AuthConstant {
 
     public static final String TOKEN_PREFIX = "";
 
+    /**
+     * token服务器后缀
+     */
+    public static final String TOKEN_SERVER = "/oauth/token";
+
+    /**
+     * 认证服务器后缀
+     */
+    public static final String AUTH_SERVER = "/oauth/authorize";
+
+    /**
+     * 认证回调地址后缀
+     */
+    public static final String CALL_BACK = "/oauth/callback";
+
 }

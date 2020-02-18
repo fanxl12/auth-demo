@@ -13,6 +13,8 @@ import org.springframework.web.client.RestTemplate;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.net.URI;
+import java.net.URISyntaxException;
 
 /**
  * @description
@@ -26,13 +28,20 @@ public class CookieUtil {
      * @param name 名称
      * @param value 值
      * @param maxAge 有效期 单位秒
-     * @param domain 域名
+     * @param url 域名
      * @return {@link Cookie} Cookie对象
      */
-    public static Cookie getCookie(String name, String value, int maxAge, String domain) {
+    public static Cookie getCookie(String name, String value, int maxAge, String url)  {
         Cookie cookie = new Cookie(name, value);
+        try {
+            URI uri = new URI(url);
+            if (uri.getHost()!=null) {
+                cookie.setDomain(uri.getHost());
+            }
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+        }
         cookie.setMaxAge(maxAge);
-        cookie.setDomain(domain);
         cookie.setPath("/");
         return cookie;
     }
@@ -44,16 +53,17 @@ public class CookieUtil {
      * @param tokenInfo token信息
      * @param type {@link AuthType} 处理类型
      */
-    public static void saveToken(HttpServletRequest request, HttpServletResponse response, TokenInfo tokenInfo, String type) {
+    public static void saveToken(HttpServletRequest request, HttpServletResponse response,
+                                 TokenInfo tokenInfo, String type, String url) {
         AuthType authType = AuthType.of(type);
         if (authType.equals(AuthType.COOKIE)) {
             response.addCookie(CookieUtil.getCookie(AuthConstant.COOKIE_ACCESS_TOKEN_NAME, tokenInfo.getAccess_token(),
-                    tokenInfo.getExpires_in().intValue(), "web.fan.com"));
+                    tokenInfo.getExpires_in().intValue(), url));
 
             response.addCookie(CookieUtil.getCookie(AuthConstant.COOKIE_REFRESH_TOKEN_NAME, tokenInfo.getRefresh_token(),
-                    AuthConstant.COOKIE_REFRESH_TOKEN_TIME, "web.fan.com"));
+                    AuthConstant.COOKIE_REFRESH_TOKEN_TIME, url));
         } else {
-            request.getSession().setAttribute("token", tokenInfo);
+            request.getSession().setAttribute(AuthConstant.SESSION_TOKEN_KEY, tokenInfo);
         }
     }
 
@@ -74,7 +84,7 @@ public class CookieUtil {
         }
         HttpEntity<MultiValueMap<String, String>> entity = new HttpEntity<>(params, headers);
 
-        ResponseEntity<TokenInfo> responseEntity = restTemplate.exchange(securityProperties.getTokenServer(), HttpMethod.POST, entity, TokenInfo.class);
+        ResponseEntity<TokenInfo> responseEntity = restTemplate.exchange(securityProperties.getTokenServer() + AuthConstant.TOKEN_SERVER, HttpMethod.POST, entity, TokenInfo.class);
         TokenInfo tokenInfo = responseEntity.getBody();
         tokenInfo.init();
         return tokenInfo;

@@ -16,10 +16,10 @@ auth:
   security:
     type: session
     redirectType: api
-    authServer: http://auth.fan.com:8011/oauth/authorize
-    tokenServer: http://auth.fan.com:8011/oauth/token
+    authServer: http://auth.fan.com:8011
+    tokenServer: http://auth.fan.com:8011
     client:
       id: api-app
       secret: 123456
-      callback: http://web.fan.com:8010/api-server/oauth/callback
-      state: http://web.fan.com:8080/
+      callback: http://web.fan.com:8010/api-server
+      state: http://web.fan.com:8080

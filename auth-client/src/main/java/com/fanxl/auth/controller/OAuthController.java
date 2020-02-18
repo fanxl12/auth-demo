@@ -39,7 +39,7 @@ public class OAuthController {
         TokenInfo tokenInfo = CookieUtil.getTokenInfo(securityProperties, code, null, restTemplate);
         log.info("token: {}", tokenInfo.toString());
 
-        CookieUtil.saveToken(request, response, tokenInfo, securityProperties.getType());
+        CookieUtil.saveToken(request, response, tokenInfo, securityProperties.getType(), state);
 
         response.sendRedirect(state);
     }

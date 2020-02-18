@@ -3,17 +3,19 @@ package com.fanxl.auth.filter;
 import com.alibaba.fastjson.JSON;
 import com.fanxl.auth.constant.AuthConstant;
 import com.fanxl.auth.constant.RedirectType;
+import com.fanxl.auth.service.AuthSetService;
 import com.fanxl.auth.properties.ClientProperties;
 import com.fanxl.auth.properties.SecurityProperties;
 import com.fanxl.auth.token.TokenInfo;
 import com.fanxl.auth.utils.CookieUtil;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.web.ServerProperties;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
+import org.springframework.util.AntPathMatcher;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.filter.OncePerRequestFilter;
 
@@ -41,9 +43,27 @@ public class AuthFilter extends OncePerRequestFilter {
 
     private RestTemplate restTemplate = new RestTemplate();
 
-    private String[] notAuthUrls = new String[] {"/favicon.ico", "/static", "/oauth/callback", "/api/test",
-            "/api-server/favicon.ico", "/api-server/static", "/api-server/oauth/callback",
-            "/api-server/api/test", "/api-server/api/cookies"};
+    @Autowired
+    private AuthSetService authSetService;
+
+    @Autowired
+    private ServerProperties serverProperties;
+
+    private AntPathMatcher pathMatcher = new AntPathMatcher();
+
+    public boolean matchUrl(String url) {
+        String contextPath = serverProperties.getServlet().getContextPath();
+        String[] arrays = authSetService.getNotAuthUrl();
+        if (StringUtils.isNotEmpty(contextPath)) {
+            url = url.substring(contextPath.length());
+        }
+        for (String item : arrays) {
+            if (pathMatcher.match(item, url)) {
+                return true;
+            }
+        }
+        return false;
+    }
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
@@ -54,7 +74,7 @@ public class AuthFilter extends OncePerRequestFilter {
                 log.info("name:{}, value:{}", cookie.getName(), cookie.getValue());
             }
         }
-        if(ArrayUtils.contains(notAuthUrls, request.getRequestURI())) {
+        if(matchUrl(request.getRequestURI())) {
             log.info("{}不需要认证", request.getRequestURI());
             filterChain.doFilter(request, response);
         } else {
@@ -66,7 +86,7 @@ public class AuthFilter extends OncePerRequestFilter {
                         log.info("刷新token了");
                         TokenInfo tokenInfo = CookieUtil.getTokenInfo(securityProperties, null, refreshToken, restTemplate);
                         accessToken = tokenInfo.getAccess_token();
-                        CookieUtil.saveToken(request, response, tokenInfo, securityProperties.getType());
+                        CookieUtil.saveToken(request, response, tokenInfo, securityProperties.getType(), request.getRequestURI());
                     } catch (Exception e) {
                         e.printStackTrace();
                         toAuthLogin(response);
@@ -85,9 +105,9 @@ public class AuthFilter extends OncePerRequestFilter {
     private void toAuthLogin(HttpServletResponse response) {
         log.info("没有认证，要去认证服务器认证");
         ClientProperties client = securityProperties.getClient();
-        String url = securityProperties.getAuthServer() + "?" +
+        String url = securityProperties.getAuthServer() + AuthConstant.AUTH_SERVER + "?" +
                 "client_id=" + client.getId() + "&" +
-                "redirect_uri=" + client.getCallback() + "&" +
+                "redirect_uri=" + client.getCallback() + AuthConstant.CALL_BACK + "&" +
                 "response_type=code&" +
                 "state=" + client.getState();
 

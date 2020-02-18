@@ -30,12 +30,12 @@ public class CookieTokenFilter extends OncePerRequestFilter {
 	@Override
 	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
 		log.info("cookie filter");
-		String accessToken = getCookie(request, "fan_access_token");
+		String accessToken = getCookie(request, AuthConstant.COOKIE_ACCESS_TOKEN_NAME);
 		if (StringUtils.isNotBlank(accessToken)) {
 			log.info("cookie 认证");
 			request.setAttribute(AuthConstant.TOKEN_KEY, accessToken);
 		} else {
-			String refreshToken = getCookie(request, "fan_refresh_token");
+			String refreshToken = getCookie(request, AuthConstant.REFRESH_TOKEN_KEY);
 			if (StringUtils.isNotBlank(refreshToken)) {
 				request.setAttribute(AuthConstant.REFRESH_TOKEN_KEY, refreshToken);
 			}
