@@ -77,7 +77,7 @@ public class CookieUtil {
         if (StringUtils.isNotEmpty(code)) {
             params.add("code", code);
             params.add("grant_type", "authorization_code");
-            params.add("redirect_uri", securityProperties.getClient().getCallback());
+            params.add("redirect_uri", securityProperties.getClient().getCallback() + AuthConstant.CALL_BACK);
         } else {
             params.add("grant_type", "refresh_token");
             params.add("refresh_token", refreshToken);

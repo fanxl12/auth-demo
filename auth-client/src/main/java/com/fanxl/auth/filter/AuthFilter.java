@@ -83,7 +83,7 @@ public class AuthFilter extends OncePerRequestFilter {
                 String refreshToken = (String) request.getAttribute(AuthConstant.REFRESH_TOKEN_KEY);
                 if (!StringUtils.isEmpty(refreshToken)) {
                     try {
-                        log.info("刷新token了");
+                        log.info("刷新token了:{}", refreshToken);
                         TokenInfo tokenInfo = CookieUtil.getTokenInfo(securityProperties, null, refreshToken, restTemplate);
                         accessToken = tokenInfo.getAccess_token();
                         CookieUtil.saveToken(request, response, tokenInfo, securityProperties.getType(), request.getRequestURI());
