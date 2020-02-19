@@ -25,7 +25,6 @@ public class SessionTokenFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-        log.info("session filter");
         TokenInfo token = (TokenInfo)request.getSession().getAttribute(AuthConstant.SESSION_TOKEN_KEY);
         if(token != null) {
             String accessToken = token.getAccess_token();

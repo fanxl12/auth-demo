@@ -10,12 +10,24 @@ import lombok.Data;
 @Data
 public class ClientProperties {
 
+    /**
+     * client_id
+     */
     private String id;
 
+    /**
+     * client_secret
+     */
     private String secret;
 
+    /**
+     * sso单点登录code码的回调服务器地址
+     */
     private String callback;
 
+    /**
+     * sso单点登录成功之后回调地址
+     */
     private String state;
 
 }

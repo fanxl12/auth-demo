@@ -18,6 +18,8 @@ auth:
     redirectType: api
     authServer: http://auth.fan.com:8011
     tokenServer: http://auth.fan.com:8011
+    logout: /logout
+    logoutRedirectUrl: http://web.fan.com:8080
     client:
       id: api-app
       secret: 123456

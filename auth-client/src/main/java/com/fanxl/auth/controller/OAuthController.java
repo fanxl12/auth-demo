@@ -24,7 +24,8 @@ import javax.servlet.http.HttpServletResponse;
 @RestController
 public class OAuthController {
 
-    private RestTemplate restTemplate = new RestTemplate();
+    @Autowired
+    private RestTemplate restTemplate;
 
     @Autowired
     private SecurityProperties securityProperties;

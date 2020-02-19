@@ -29,7 +29,6 @@ public class CookieTokenFilter extends OncePerRequestFilter {
 
 	@Override
 	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-		log.info("cookie filter");
 		String accessToken = getCookie(request, AuthConstant.COOKIE_ACCESS_TOKEN_NAME);
 		if (StringUtils.isNotBlank(accessToken)) {
 			log.info("cookie 认证");

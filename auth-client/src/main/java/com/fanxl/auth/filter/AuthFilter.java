@@ -41,7 +41,8 @@ public class AuthFilter extends OncePerRequestFilter {
     @Autowired
     private SecurityProperties securityProperties;
 
-    private RestTemplate restTemplate = new RestTemplate();
+    @Autowired
+    private RestTemplate restTemplate;
 
     @Autowired
     private AuthSetService authSetService;
