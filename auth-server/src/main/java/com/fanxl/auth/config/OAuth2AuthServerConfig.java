@@ -44,7 +44,7 @@ public class OAuth2AuthServerConfig extends AuthorizationServerConfigurerAdapter
                 .scopes("read", "write")
                 .accessTokenValiditySeconds(3600)
                 .resourceIds("user-server")
-                .authorizedGrantTypes("password")
+                .authorizedGrantTypes("password", "authorization_code", "refresh_token")
                 .and()
                 .withClient("api-app")
                 .secret(passwordEncoder.encode("123456"))
@@ -62,9 +62,9 @@ public class OAuth2AuthServerConfig extends AuthorizationServerConfigurerAdapter
                 .accessTokenValiditySeconds(3600)
                 .refreshTokenValiditySeconds(259200)
                 .resourceIds("flow-server")
-                .redirectUris("http://web.fan.com:8016/oauth/callback")
+                .redirectUris("http://web.fan.com:8016/flow-server/login")
                 .autoApprove(true)
-                .authorizedGrantTypes("authorization_code")
+                .authorizedGrantTypes("authorization_code", "refresh_token")
                 .and()
                 .withClient("web-app")
                 .secret(passwordEncoder.encode("123456"))
@@ -85,6 +85,8 @@ public class OAuth2AuthServerConfig extends AuthorizationServerConfigurerAdapter
      */
     @Override
     public void configure(AuthorizationServerSecurityConfigurer security) throws Exception {
-        security.checkTokenAccess("isAuthenticated()");
+        security.allowFormAuthenticationForClients();
+        security.checkTokenAccess("permitAll()");
+//        security.checkTokenAccess("isAuthenticated()");
     }
 }

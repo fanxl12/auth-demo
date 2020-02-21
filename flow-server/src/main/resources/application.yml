@@ -1,5 +1,7 @@
 server:
   port: 8016
+  servlet:
+    context-path: /flow-server
 
 spring:
   thymeleaf:
@@ -11,23 +13,18 @@ spring:
     suffix: .html
     servlet:
       content-type: text/html
-  redis:
-    database: 0
-    host: 192.168.205.150
-    port: 6379
-    # password:
-    # 连接超时时间
-    timeout: 10000
   mvc:
     static-path-pattern: /static/**
-
-auth:
-  security:
-    type: session
-    authServer: http://auth.fan.com:8011/oauth/authorize
-    tokenServer: http://auth.fan.com:8011/oauth/token
+security:
+  oauth2:
     client:
-      id: flow-app
-      secret: 123456
-      callback: http://web.fan.com:8016/oauth/callback
-      state: /
+      client-id: flow-app
+      client-secret: 123456
+      user-authorization-uri: http://auth.fan.com:8011/oauth/authorize
+      access-token-uri: http://auth.fan.com:8011/oauth/token
+    resource:
+      token-info-uri: http://auth.fan.com:8011/oauth/check_token
+
+logging:
+  level:
+    root: info
