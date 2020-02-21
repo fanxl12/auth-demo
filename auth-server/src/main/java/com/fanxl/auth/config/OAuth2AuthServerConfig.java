@@ -74,7 +74,17 @@ public class OAuth2AuthServerConfig extends AuthorizationServerConfigurerAdapter
                 .resourceIds("web-server")
                 .redirectUris("http://web.fan.com:8017/oauth/callback")
                 .autoApprove(true)
-                .authorizedGrantTypes("authorization_code");
+                .authorizedGrantTypes("authorization_code")
+                .and()
+                .withClient("test-app")
+                .secret(passwordEncoder.encode("123456"))
+                .scopes("read")
+                .accessTokenValiditySeconds(3600)
+                .refreshTokenValiditySeconds(259200)
+                .resourceIds("test-server")
+                .redirectUris("http://web.fan.com:8021/test-server/login")
+                .autoApprove(true)
+                .authorizedGrantTypes("password", "authorization_code", "refresh_token");
 
     }
 

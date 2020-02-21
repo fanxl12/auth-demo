@@ -11,6 +11,7 @@
         <module>web-server</module>
         <module>auth-client</module>
         <module>test-server</module>
+        <module>auth-sso-client</module>
     </modules>
 
     <parent>

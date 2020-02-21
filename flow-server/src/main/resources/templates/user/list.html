@@ -4,27 +4,10 @@
 <head>
     <meta charset="UTF-8">
     <title>用户列表</title>
-    <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
-    <script type="text/javascript">
-        function getTest() {
-            console.log('get data')
-            $.ajax({
-                type: "get",
-                url: "/test/me",
-                dataType: "json",
-                success: function (data) {
-                    console.log(data)
-                },
-                error: function (XMLHttpRequest, textStatus, errorThrown) {
-                    alert(errorThrown);
-                }
-            });
-        };
-    </script>
 </head>
 <body>
     <h1>用户列表</h1>
-    <button onclick="getTest()">测试接口</button>
     <h2 th:text="${name}">123</h2>
+    <a href="http://web.fan.com:8021/test-server">去test-server</a>
 </body>
 </html>

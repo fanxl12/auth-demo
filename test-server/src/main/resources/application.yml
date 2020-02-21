@@ -1,2 +1,14 @@
 server:
   port: 8021
+  servlet:
+    context-path: /test-server
+
+security:
+  oauth2:
+    client:
+      client-id: test-app
+      client-secret: 123456
+      user-authorization-uri: http://auth.fan.com:8011/oauth/authorize
+      access-token-uri: http://auth.fan.com:8011/oauth/token
+    resource:
+      token-info-uri: http://auth.fan.com:8011/oauth/check_token
