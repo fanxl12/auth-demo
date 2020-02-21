@@ -22,6 +22,11 @@ public class TestController {
         return "you get api information";
     }
 
+    @GetMapping("/not")
+    public String not() {
+        return "this is not need auth!";
+    }
+
     @RequestMapping("/me")
     public Principal user(Principal principal) {
         log.info("用户信息:{}", principal);

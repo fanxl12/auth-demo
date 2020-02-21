@@ -1,4 +1,4 @@
-package com.fanxl.auth.config;
+package com.fanxl.auth.filter;
 
 import io.micrometer.core.instrument.util.StringUtils;
 import org.springframework.security.core.Authentication;
