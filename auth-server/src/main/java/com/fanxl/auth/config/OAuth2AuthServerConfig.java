@@ -64,7 +64,7 @@ public class OAuth2AuthServerConfig extends AuthorizationServerConfigurerAdapter
                 .resourceIds("flow-server")
                 .redirectUris("http://web.fan.com:8016/flow-server/login")
                 .autoApprove(true)
-                .authorizedGrantTypes("authorization_code", "refresh_token")
+                .authorizedGrantTypes("password", "authorization_code", "refresh_token")
                 .and()
                 .withClient("web-app")
                 .secret(passwordEncoder.encode("123456"))
